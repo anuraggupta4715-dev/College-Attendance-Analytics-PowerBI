@@ -1,47 +1,49 @@
-# 📊 College Attendance Analytics Dashboard — Power BI
+# 📊 College Attendance Analytics Dashboard
+
+### An Interactive Power BI Project
 
 An interactive **College Attendance Analytics Dashboard** developed using Microsoft Power BI, Power Query, and DAX to analyse student attendance, monitor academic performance, and identify attendance shortages.
 
-The project presents attendance insights through five dashboard pages: Overall, Students, Subjects, Attendance, and Shortage.
+The project presents attendance insights through five dashboard pages: **Overall, Students, Subjects, Attendance, and Shortage**.
 
 ---
 
 ## 👨‍💻 Project Information
 
-| Detail | Information |
+| Detail | Description |
 |---|---|
 | **Project Title** | College Attendance Analytics Dashboard |
 | **Developed By** | Anurag Gupta |
 | **Registration Number** | PIET24CD007 |
 | **Institution** | Poornima Institute of Engineering & Technology (PIET) |
-| **Primary Tool** | Microsoft Power BI |
+| **Visualization Tool** | Microsoft Power BI |
 | **Data Preparation** | Power Query |
-| **Calculations and Analytics** | DAX |
-| **Departments Covered** | CSE, AI&DS, IoT |
-| **Students Represented** | 245 |
-| **Subjects Covered** | 10 |
+| **Calculations** | DAX |
+| **Departments** | CSE, AI&DS, IoT |
+| **Students** | 245 |
+| **Subjects** | 10 |
 
 ## 📌 Project Overview
 
-The College Attendance Analytics Dashboard transforms attendance records into interactive visual reports that help users explore attendance patterns across students, departments, academic years, and subjects.
+The College Attendance Analytics Dashboard transforms student attendance records into meaningful visual insights. It helps users explore attendance patterns across departments, academic years, individual students, and subjects.
 
-The dashboard includes KPI cards, charts, tables, attendance trends, and interactive filters. It also highlights students below the 75% attendance threshold, critical attendance cases below 65%, and subjects requiring attention.
+The dashboard includes KPI cards, interactive slicers, charts, tables, attendance trends, and shortage analysis. It highlights students below the 75% attendance threshold and critical cases below 65%, helping identify areas that may require attention.
 
 ## 🎯 Objectives
 
-- Monitor overall student attendance through interactive visualizations.
+- Monitor overall student attendance.
 - Analyse attendance across academic years and departments.
 - Compare attendance performance across subjects.
-- Identify students whose attendance is below 75%.
+- Identify students with attendance below 75%.
 - Highlight critical attendance cases below 65%.
 - Analyse present and absent attendance records.
 - Examine attendance shortages and additional classes required to reach the target.
-- Support detailed analysis through interactive slicers and dashboard navigation.
+- Present attendance data through interactive visualizations and filters.
 
 ## 🛠️ Technologies Used
 
-- **Microsoft Power BI Desktop** — Dashboard development and visualization.
-- **Power Query** — Data import and preparation.
+- **Microsoft Power BI Desktop** — Dashboard creation and data visualization.
+- **Power Query** — Data import and transformation.
 - **DAX (Data Analysis Expressions)** — Measures and attendance calculations.
 - **Microsoft Excel** — Dataset storage and input.
 
@@ -56,6 +58,9 @@ College-Attendance-Analytics-PowerBI/
 ├── PowerBI/
 │   └── ANURAG_GUPTA_PBI.pbix
 │
+├── Report/
+│   └── College_Attendance_Analytics_Project_Report_Anurag_Gupta.pdf
+│
 ├── Screenshots/
 │   ├── overall_dashboard.png
 │   ├── students_dashboard.png
@@ -63,37 +68,34 @@ College-Attendance-Analytics-PowerBI/
 │   ├── attendance_dashboard.png
 │   └── shortage_dashboard.png
 │
-├── Report/
-│   └── College_Attendance_Analytics_Project_Report_Anurag_Gupta.pdf
-│
 ├── README.md
 └── LICENSE
 ```
 
-## 📊 Dashboard Pages
+## 📸 Dashboard Previews
 
 ### 1. Overall Dashboard
 
-Provides a high-level overview of college attendance through KPI cards and visual summaries.
+Provides a summary of attendance performance through key metrics and visualizations.
 
-**Key components:**
+**Highlights:**
 - Total Students
 - Overall Attendance
 - Students Below 75%
 - Critical Subjects
 - Students by Academic Year
 - Attendance by Department
-- Weekly Attendance Trend
+- Attendance Trends
 - Attendance Category Distribution
 - Attendance by Subject
 
-![Overall Attendance Dashboard](Screenshots/overall_dashboard.png)
+![Overall Dashboard](Screenshots/overall_dashboard.png)
 
 ### 2. Students Dashboard
 
 Focuses on student demographics and individual attendance performance.
 
-**Key components:**
+**Highlights:**
 - Total Students
 - Male and Female Students
 - Average Attendance
@@ -108,9 +110,9 @@ Focuses on student demographics and individual attendance performance.
 
 ### 3. Subjects Dashboard
 
-Analyses attendance performance at the subject level.
+Provides subject-level attendance analysis and identifies subjects requiring attention.
 
-**Key components:**
+**Highlights:**
 - Total Subjects
 - Theory Subjects
 - Practical Subjects
@@ -125,9 +127,9 @@ Analyses attendance performance at the subject level.
 
 ### 4. Attendance Dashboard
 
-Examines attendance records and trends over time.
+Analyses attendance records and trends across the selected date range.
 
-**Key components:**
+**Highlights:**
 - Total Classes
 - Total Present Records
 - Total Absent Records
@@ -139,15 +141,13 @@ Examines attendance records and trends over time.
 - Attendance by Department
 - Students by Academic Year
 
-The dashboard includes a date-range filter for examining attendance during a selected period.
-
 ![Attendance Dashboard](Screenshots/attendance_dashboard.png)
 
 ### 5. Shortage Dashboard
 
-Focuses on attendance risk and identifying students and subjects requiring attention.
+Focuses on attendance risk, critical cases, and shortage analysis.
 
-**Key components:**
+**Highlights:**
 - Students Below 75%
 - Critical Students Below 65%
 - Average Additional Classes Required
@@ -163,11 +163,133 @@ Focuses on attendance risk and identifying students and subjects requiring atten
 
 ## 🧮 Key DAX Measures
 
-The following measures are used in the project.
-
 ### 1. Overall Attendance %
 
 ```dax
 Overall Attendance % =
 DIVIDE(
-    SUM(F
+    SUM(FactAttendance[PresentFlag]),
+    COUNTROWS(FactAttendance),
+    0
+)
+```
+
+Calculates the proportion of present attendance records in the current filter context.
+
+### 2. Total Students
+
+```dax
+Total Students =
+DISTINCTCOUNT(DimStudent[StudentID])
+```
+
+Counts distinct student IDs.
+
+### 3. Students Below 75%
+
+```dax
+Students Below 75% =
+COUNTROWS(
+    FILTER(
+        VALUES(DimStudent[StudentID]),
+        CALCULATE([Overall Attendance %]) < 0.75
+    )
+)
+```
+
+Counts students whose calculated attendance percentage is below 75%.
+
+### 4. Critical Students
+
+```dax
+Critical Students =
+COUNTROWS(
+    FILTER(
+        VALUES(DimStudent[StudentID]),
+        CALCULATE([Overall Attendance %]) < 0.65
+    )
+)
+```
+
+Counts students whose calculated attendance percentage is below 65%.
+
+### 5. Total Classes
+
+```dax
+Total Classes =
+COUNTROWS(
+    SUMMARIZE(
+        FactAttendance,
+        FactAttendance[SessionDate],
+        FactAttendance[SessionNumber]
+    )
+)
+```
+
+Counts unique combinations of session date and session number in the current filter context.
+
+**Note:** Unique class sessions and student attendance records are different metrics. A single class session can contain attendance records for multiple students.
+
+### 6. Percentage of Students at Risk
+
+```dax
+Percentage of Students at Risk =
+DIVIDE([Students Below 75%], [Total Students], 0)
+```
+
+Calculates the proportion of students below 75% attendance.
+
+## 📈 Key Findings
+
+Based on the supplied dashboard screenshots:
+
+- The Overall dashboard displays **245 students**.
+- Overall attendance is displayed as **81.3%** on the Overall dashboard.
+- **58 students below 75% attendance** are displayed on the Overall dashboard.
+- The Overall dashboard displays **9 critical subjects**.
+- The project covers **10 subjects**, comprising 6 theory subjects and 4 practical/lab subjects.
+- The Subjects dashboard highlights PDS and DVR in its critical-subject table.
+- The Attendance dashboard displays approximately 65K attendance records, including around 53K present records and 12K absent records.
+
+Displayed values can vary with the selected filters and calculation context.
+
+## 🚀 How to Run the Project
+
+1. Clone or download this repository.
+2. Install or open **Microsoft Power BI Desktop**.
+3. Open `PowerBI/ANURAG_GUPTA_PBI.pbix`.
+4. If Power BI requests the source file, locate `Dataset/Attendance_Analytics_PowerBI.xlsx` and update the data source path if necessary.
+5. Refresh the data if the source is available.
+6. Navigate through the five dashboard pages and explore the available slicers and visualizations.
+
+## 📁 Project Resources
+
+- **[Power BI Dashboard](PowerBI/ANURAG_GUPTA_PBI.pbix)** — Interactive report.
+- **[Excel Dataset](Dataset/Attendance_Analytics_PowerBI.xlsx)** — Dataset used by the project.
+- **[Project Report PDF](Report/College_Attendance_Analytics_Project_Report_Anurag_Gupta.pdf)** — Project documentation.
+- **[Dashboard Screenshots](Screenshots/)** — Images of the five dashboard pages.
+
+## 🎓 Learning Outcomes
+
+This project demonstrates practical experience with:
+
+- Data preparation using Power Query.
+- DAX measures and attendance calculations.
+- KPI cards and interactive data visualization.
+- Student, department, and subject-level analysis.
+- Attendance shortage and risk analysis.
+- Multi-page dashboard design in Power BI.
+
+## 👤 Author
+
+**Anurag Gupta**  
+Registration Number: `PIET24CD007`  
+Poornima Institute of Engineering & Technology (PIET)
+
+## 📄 License
+
+This repository includes an MIT License. Refer to the [`LICENSE`](LICENSE) file for details.
+
+---
+
+⭐ If you find this project useful for learning Power BI and attendance analytics, consider giving this repository a star.
